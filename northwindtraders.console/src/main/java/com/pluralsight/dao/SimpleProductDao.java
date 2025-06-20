@@ -12,9 +12,9 @@ public class SimpleProductDao implements ProductDao {
     private int lastProductId = 3;
 
     public SimpleProductDao() {
-        /*products.add(new Product(1, "Coffee", "Beverage", 6));
-        products.add(new Product(2, "Cold Brew", "Beverage", 3));
-        products.add(new Product(3, "Smoothie", "Beverage", 7));*/
+        products.add(new Product(1, "Coffee", 6));
+        products.add(new Product(2, "Cold Brew", 3));
+        products.add(new Product(3, "Smoothie", 7));
     }
 
     @Override
@@ -24,11 +24,19 @@ public class SimpleProductDao implements ProductDao {
 
     @Override
     public Product add(Product product) {
-        if(product.getProductId() == 0){
-            product.setProductId(lastProductId + 1);
+        if (product.getProductId() == 0) {
             lastProductId++;
+            product.setProductId(lastProductId);
         }
         products.add(product);
         return product;
+    }
+
+    // 🔍 Add this method here
+    @Override
+    public List<Product> searchProduct(String searchTerm) {
+        return products.stream()
+                .filter(p -> p.getProductName().toLowerCase().contains(searchTerm.toLowerCase()))
+                .toList();
     }
 }

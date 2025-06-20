@@ -1,10 +1,11 @@
-package com.pluralsight.northwindtraders.console.dao;
+package com.pluralsight.dao;
 
-import com.pluralsight.northwindtraders.console.model.Product;
-
+import com.pluralsight.model.Product;
 import java.util.List;
 
-public interface ProductDao {
+public interface ProductDao  {
     List<Product> getAll();
     Product add(Product product);
+    List<Product> searchProduct(String searchTerm);
+
 }

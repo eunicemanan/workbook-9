@@ -3,13 +3,17 @@ package com.pluralsight.dao;
 
 import com.pluralsight.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
-import com.pluralsight.northwindtraders.console.dao.ProductDao;
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+
+@Repository
+@Primary
 public class JdbcProductDao implements ProductDao {
 
     private DataSource dataSource;
@@ -24,9 +28,10 @@ public class JdbcProductDao implements ProductDao {
     public List<Product> getAll() {
         // SQL query to retrieve product data
         String sql = """
-                SELECT productid, productname, unitprice, unitsinstock
-                FROM products;
-                """;
+        SELECT productid, productname, unitprice
+        FROM products;
+        """;
+
 
         List<Product> products = new ArrayList<>();
 
@@ -45,7 +50,7 @@ public class JdbcProductDao implements ProductDao {
                 int productId = resultSet.getInt("productid");
                 String productName = resultSet.getString("productname");
                 double unitPrice = resultSet.getDouble("unitprice");
-                Product product = new Product(productId, productName,unitPrice);
+                Product product = new Product(productId, productName, unitPrice);
                 products.add(product);
 
             }
@@ -79,9 +84,8 @@ public class JdbcProductDao implements ProductDao {
                         int productID = resultSet.getInt("ProductID");
                         String productName = resultSet.getString("ProductName");
                         double unitPrice = resultSet.getDouble("UnitPrice");
-                        int unitsInStock = resultSet.getInt("UnitsInStock");
 
-                        Product product = new Product(productID, productName, unitPrice, unitsInStock);
+                        Product product = new Product(productID, productName, unitPrice);
                         products.add(product);
                     }
                 }
@@ -90,13 +94,43 @@ public class JdbcProductDao implements ProductDao {
                 System.out.println("There was an error retrieving the products. Please try again, or contact support.");
                 e.printStackTrace(); // developer-friendly message
             }
-        }
 
         return products;
     }
 
     @Override
     public Product add(Product product) {
-        return null;
+        String sql = """
+        INSERT INTO products (productid, productname, unitprice)
+        VALUES (?, ?, ?)
+    """;
+
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            statement.setString(1, product.getProductName());
+            statement.setDouble(2, product.getUnitPrice());
+            statement.setInt(3, product.getProductId()); // Ensure Product has a getQuantity() method
+
+            int affectedRows = statement.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new SQLException("Creating product failed, no rows affected.");
+            }
+
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    product.setProductId(generatedKeys.getInt(1));
+                } else {
+                    throw new SQLException("Creating product failed, no ID obtained.");
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return product;
     }
+
 }

@@ -2,21 +2,14 @@ package com.pluralsight.model;
 
 public class Product {
     private int productId;
-    private String productName;
-    private double unitPrice;
+   private String productName;
+   private double unitPrice;
 
-    public Product(int productID, String productName, double unitPrice) {
-        this.productId = productID;
-        this.productName = productName;
-        this.unitPrice = unitPrice;
-    }
+    public Product(int productId, String name, double price) {
+        this.productId = productId;
+        this.productName = name;
 
-    public int getProductID() {
-        return productId;
-    }
-
-    public void setProductID(int productID) {
-        this.productId = productID;
+      this.unitPrice = price;
     }
 
     public String getProductName() {
@@ -27,6 +20,7 @@ public class Product {
         this.productName = productName;
     }
 
+
     public double getUnitPrice() {
         return unitPrice;
     }
@@ -35,28 +29,13 @@ public class Product {
         this.unitPrice = unitPrice;
     }
 
-}
+    public int getProductId() {
+        return productId;
+    }
 
-//public class Product {
-//    private int productId;
-//    private String name;
-//    private String category;
-//    private double price;
-//
-//    public Product(int productId, String name, String category, double price) {
-//        this.productId = productId;
-//        this.name = name;
-//        this.category = category;
-//        this.price = price;
-//    }
-//
-//    public int getProductId() {
-//        return productId;
-//    }
-//
-//    public void setProductId(int productId) {
-//        this.productId = productId;
-//    }
+   public void setProductId(int productId) {
+        this.productId = productId;
+   }
 //
 //    @Override
 //    public String toString() {
@@ -69,3 +48,14 @@ public class Product {
 //        return sb.toString();
 //    }
 //}
+
+   @Override
+   public String toString() {
+          final StringBuilder sb = new StringBuilder("Product{");
+           sb.append("productId=").append(productId);
+           sb.append(", productName='").append(productName).append('\'');
+           sb.append(", unitPrice=").append(unitPrice);
+           sb.append('}');
+           return sb.toString();
+   }
+}

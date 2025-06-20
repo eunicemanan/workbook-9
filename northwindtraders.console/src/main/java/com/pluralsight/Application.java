@@ -1,9 +1,9 @@
 package com.pluralsight;
 
 
+import com.pluralsight.dao.ProductDao;
+import com.pluralsight.dao.SimpleProductDao;
 import com.pluralsight.model.Product;
-import com.pluralsight.northwindtraders.console.dao.ProductDao;
-//import com.pluralsight.northwindtraders.console.dao.SimpleProductDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -23,9 +23,10 @@ public class Application implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-      /*  productDao.add(new Product(0,"coke", 3.99, 5));*/
+        /*  productDao.add(new Product(0,"coke", 3.99, 5));*/
+        SimpleProductDao.add(new Product(0,"coke", 3.99));
 
-        List<Product> products = ProductDao.getAll();
+        List<Product> products = productDao.getAll();
 
         System.out.println(products);
 
