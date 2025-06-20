@@ -13,7 +13,6 @@ import java.util.List;
 
 
 @Repository
-@Primary
 public class JdbcProductDao implements ProductDao {
 
     private DataSource dataSource;
@@ -101,8 +100,8 @@ public class JdbcProductDao implements ProductDao {
     @Override
     public Product add(Product product) {
         String sql = """
-        INSERT INTO products (productid, productname, unitprice)
-        VALUES (?, ?, ?)
+        INSERT INTO products (productname, unitprice)
+        VALUES (?, ?)
     """;
 
         try (Connection connection = dataSource.getConnection();
@@ -110,7 +109,6 @@ public class JdbcProductDao implements ProductDao {
 
             statement.setString(1, product.getProductName());
             statement.setDouble(2, product.getUnitPrice());
-            statement.setInt(3, product.getProductId()); // Ensure Product has a getQuantity() method
 
             int affectedRows = statement.executeUpdate();
 
